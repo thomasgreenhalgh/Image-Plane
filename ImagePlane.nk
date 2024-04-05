@@ -1,0 +1,235 @@
+set cut_paste_input [stack 0]
+version 14.0 v3
+push $cut_paste_input
+Group {
+ name ImagePlane
+ tile_color 0x2b576bff
+ gl_color 0x9b835eff
+ note_font "Bitstream Vera Sans Bold Italic"
+ note_font_color 0xe9b763ff
+ selected true
+ xpos 2710
+ ypos -13770
+ postage_stamp_frame 1001
+ addUserKnob {20 User l -}
+ addUserKnob {26 txt l "" +STARTLINE T "<b><font size=\"40\"><font color=\"#BAA655\">IMAGE</font> <font size=\"40\"><font color=\"#558A95\"> PLANE</font></b>"}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {41 GeoChoice l "Geo Choice" T ImagePlaneWrapper.GeoChoice}
+ addUserKnob {41 RefFrame l "Ref Frame" T ImagePlaneWrapper.RefFrame}
+ addUserKnob {41 Holdin l "" -STARTLINE T ImagePlaneWrapper.Holdin}
+ addUserKnob {41 TransformType l "Transform Type" T ImagePlaneWrapper.TransformType}
+ addUserKnob {26 ""}
+ addUserKnob {41 Distance T ImagePlaneWrapper.Distance}
+ addUserKnob {26 ""}
+ addUserKnob {41 CardOverscan l "Card Overscan" T ImagePlaneWrapper.CardOverscan}
+ addUserKnob {41 scale l "Overscan Input" T Reformat1.scale}
+ addUserKnob {26 "" +STARTLINE}
+}
+ Input {
+  inputs 0
+  name Inputcam
+  xpos 824
+  ypos -50
+  addUserKnob {20 User}
+  addUserKnob {3 FocalLength}
+  FocalLength {{"\[value \[topnode input0].focal]"}}
+  addUserKnob {3 Haperture}
+  Haperture {{"\[value \[topnode input0].haperture]"}}
+  addUserKnob {3 Vaperture}
+  Vaperture {{"\[value \[topnode input0].vaperture]"}}
+  addUserKnob {30 WindowTranslate}
+  WindowTranslate {{"\[value \[topnode input0].win_translate.u]"} {"\[value \[topnode input0].win_translate.v]"}}
+  addUserKnob {30 WindowScale}
+  WindowScale {{"\[value \[topnode input0].win_scale.u]"} {"\[value \[topnode input0].win_scale.v]"}}
+  addUserKnob {13 Translate}
+  Translate {{"\[value \[topnode input0].translate.x]"} {"\[value \[topnode input0].translate.y]"} {"\[value \[topnode input0].translate.z]"}}
+  addUserKnob {13 Rotate}
+  Rotate {{"\[value \[topnode input0].rotate.x]"} {"\[value \[topnode input0].rotate.y]"} {"\[value \[topnode input0].rotate.z]"}}
+  addUserKnob {13 Scale}
+  Scale {{"\[value \[topnode input0].scaling.x]"} {"\[value \[topnode input0].scaling.y]"} {"\[value \[topnode input0].scaling.z]"}}
+ }
+ Dot {
+  name Dot13
+  xpos 861
+  ypos 141
+ }
+set Nb077e560 [stack 0]
+ Dot {
+  name Dot12
+  xpos 861
+  ypos 276
+ }
+ FrameHold {
+  firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
+  name FrameHold2
+  xpos 730
+  ypos 266
+  disable {{1-ImagePlaneWrapper.TransformType}}
+ }
+ Camera3 {
+  inputs 0
+  translate {{parent.Inputcam.Translate} {parent.Inputcam.Translate} {parent.Inputcam.Translate}}
+  rotate {{parent.Inputcam.Rotate} {parent.Inputcam.Rotate} {parent.Inputcam.Rotate}}
+  scaling {{parent.Inputcam.Scale} {parent.Inputcam.Scale} {parent.Inputcam.Scale}}
+  focal {{parent.Inputcam.FocalLength/Reformat1.scale}}
+  haperture {{parent.Inputcam.Haperture}}
+  vaperture {{parent.Inputcam.Vaperture}}
+  win_translate {{parent.Inputcam.WindowTranslate} {parent.Inputcam.WindowTranslate}}
+  win_scale {{parent.Inputcam.WindowScale} {parent.Inputcam.WindowScale}}
+  name PROJ_CAM
+  xpos 630
+  ypos -128
+ }
+ FrameHold {
+  firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
+  name FrameHold1
+  xpos 620
+  ypos -55
+  disable {{ImagePlaneWrapper.TransformType}}
+ }
+ Input {
+  inputs 0
+  name Inputin
+  xpos 497
+  ypos -240
+  number 1
+ }
+set N3572c480 [stack 0]
+push $N3572c480
+ FrameHold {
+  firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
+  name FrameHold3
+  xpos 363
+  ypos -144
+ }
+ Switch {
+  inputs 2
+  which {{ImagePlaneWrapper.Holdin}}
+  name Switch2
+  xpos 493
+  ypos -136
+ }
+ Reformat {
+  type scale
+  resize none
+  pbb true
+  name Reformat1
+  xpos 498
+  ypos -96
+ }
+ Project3D2 {
+  inputs 2
+  crop false
+  name Project3D1
+  xpos 497
+  ypos -48
+ }
+push $Nb077e560
+ Input {
+  inputs 0
+  name Inputgeo
+  xpos 539
+  ypos 29
+  number 2
+ }
+ Sphere {
+  inputs 0
+  radius {{parent.Card1.z}}
+  name Sphere1
+  xpos 620
+  ypos 20
+ }
+ Card2 {
+  inputs 0
+  rows 1
+  columns 1
+  z {{parent.ImagePlaneWrapper.Distance}}
+  lens_in_focal {{parent.Inputcam.FocalLength}}
+  lens_in_haperture {{(parent.Inputcam.Haperture)+ImagePlane.CardOverscan}}
+  control_points {3 3 3 6
+
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0}
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0}
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0}
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0}
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0}
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0}
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0}
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0}
+1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
+  name Card1
+  xpos 717
+  ypos 79
+ }
+ Switch {
+  inputs 3
+  which {{ImagePlaneWrapper.GeoChoice}}
+  name Switch1
+  xpos 620
+  ypos 79
+ }
+ TransformGeo {
+  inputs 2
+  name TransformGeo1
+  xpos 620
+  ypos 118
+ }
+ FrameHold {
+  firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
+  name FrameHold4
+  xpos 620
+  ypos 176
+  disable {{ImagePlaneWrapper.TransformType}}
+ }
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial1
+  xpos 496
+  ypos 182
+ }
+push $N3572c480
+ Dot {
+  name Dot1
+  xpos 311
+  ypos -236
+ }
+ Remove {
+  name Remove1
+  xpos 277
+  ypos 74
+ }
+ Dot {
+  name Dot2
+  xpos 311
+  ypos 276
+ }
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  overscan 100
+  motion_vectors_type distance
+  name ScanlineRender1
+  xpos 496
+  ypos 272
+ }
+ NoOp {
+  name ImagePlaneWrapper
+  xpos 496
+  ypos 324
+  addUserKnob {20 User}
+  addUserKnob {4 GeoChoice l "Geo Choice" M {Card Sphere "Input Geo" ""}}
+  addUserKnob {3 RefFrame l "Ref Frame"}
+  RefFrame 1001
+  addUserKnob {4 Holdin l "Hold In" M {"Framehold input" "Play input"}}
+  addUserKnob {4 TransformType l "Transform Type" M {Matchmove Stabalise}}
+  addUserKnob {7 Distance R 0 1000}
+  Distance 100
+  addUserKnob {7 CardOverscan l "Card Overscan" R 0 300}
+  CardOverscan 10
+ }
+ Output {
+  name Output
+  xpos 496
+  ypos 374
+ }
+end_group
