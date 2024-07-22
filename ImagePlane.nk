@@ -1,31 +1,39 @@
 set cut_paste_input [stack 0]
-version 14.0 v3
+version 14.0 v5
 push $cut_paste_input
 Group {
  name ImagePlane
  tile_color 0x2b576bff
  gl_color 0x9b835eff
+ label "\n<i>Geo: \[value GeoChoice]\nRef: \[value RefFrame]\n"
  note_font "Bitstream Vera Sans Bold Italic"
  note_font_color 0xe9b763ff
  selected true
- xpos -846
- ypos -6200
+ xpos -893
+ ypos 1847
  postage_stamp_frame 1001
  addUserKnob {20 User l -}
  addUserKnob {26 txt l "" +STARTLINE T "<b><font size=\"40\"><font color=\"#BAA655\">IMAGE</font> <font size=\"40\"><font color=\"#558A95\"> PLANE</font></b>"}
  addUserKnob {26 ""}
+ addUserKnob {26 ImagePlane l "<b><font color=\"#BAA655\">Input Attributes</font></b>"}
+ addUserKnob {20 _1 l "" +STARTLINE n 1}
+ _1 0
  addUserKnob {41 GeoChoice l "Choice of Geo" T ImagePlaneWrapper.GeoChoice}
  addUserKnob {41 RefFrame l "Reference Frame" T ImagePlaneWrapper.RefFrame}
  addUserKnob {22 setFrame l "Set to current frame" -STARTLINE T "v = nuke.frame()\nt = nuke.thisNode()\['RefFrame']\nt.setValue(v)"}
  addUserKnob {41 Holdin l "Input hold" T ImagePlaneWrapper.Holdin}
  addUserKnob {41 TransformType l "Transform Type" T ImagePlaneWrapper.TransformType}
- addUserKnob {26 ""}
- addUserKnob {41 Distance t "Distance of the card or sphere. It will not affect the Input Geo" T ImagePlaneWrapper.Distance}
- addUserKnob {26 ""}
+ addUserKnob {41 Distance l "Geo Distance" t "Distance of the card or sphere. It will not affect the Input Geo" T ImagePlaneWrapper.Distance}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ProjectionFixes l "<b><font color=\"#BAA655\">Projection Fixes</font></b>"}
+ addUserKnob {20 _2 l "" +STARTLINE n 1}
+ _2 0
+ addUserKnob {41 occlusion_mode l "Occlusion Mode" T Project3D1.occlusion_mode}
  addUserKnob {41 CardOverscan l "Card Overscan" T ImagePlaneWrapper.CardOverscan}
  addUserKnob {41 overscan l "Scanline Overscan" T ScanlineRender1.overscan}
  addUserKnob {41 scale l "Reformat Scale" t "Fixes the crop issue when this is scaled higher than 1. Reformats the image and increases the canvas size before projecting" T Reformat1.scale}
  addUserKnob {41 samples l "Scanline Samples" T ScanlineRender1.samples}
+ addUserKnob {20 endGroup_1 n -1}
  addUserKnob {26 ""}
  addUserKnob {26 txt2 l "" -STARTLINE T "<div style=\"text-align: left; font-size: 10px; color: #666666; font-style: italic;\">\n  v 1.1 : 2024-04\n</div>\n\n"}
 }
@@ -57,7 +65,7 @@ Group {
   xpos 861
   ypos 141
  }
-set N2821d350 [stack 0]
+set N6ffe68d0 [stack 0]
  Dot {
   name Dot12
   xpos 861
@@ -78,11 +86,12 @@ set N2821d350 [stack 0]
   focal {{parent.Inputcam.FocalLength/Reformat1.scale}}
   haperture {{parent.Inputcam.Haperture}}
   vaperture {{parent.Inputcam.Vaperture}}
+  far 1000000
   win_translate {{parent.Inputcam.WindowTranslate} {parent.Inputcam.WindowTranslate}}
   win_scale {{parent.Inputcam.WindowScale} {parent.Inputcam.WindowScale}}
   name PROJ_CAM
-  xpos 630
-  ypos -128
+  xpos 647
+  ypos -140
  }
  FrameHold {
   firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
@@ -98,8 +107,8 @@ set N2821d350 [stack 0]
   ypos -240
   number 1
  }
-set N27d19b90 [stack 0]
-push $N27d19b90
+set N6f779d80 [stack 0]
+push $N6f779d80
  FrameHold {
   firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
   name FrameHold3
@@ -135,7 +144,7 @@ push $N27d19b90
   ypos 118
   number 2
  }
-push $N2821d350
+push $N6ffe68d0
  Sphere {
   inputs 0
   radius {{parent.Card1.z}}
@@ -149,24 +158,24 @@ push $N2821d350
   xpos 620
   ypos 54
  }
-push $N2821d350
+push $N6ffe68d0
  Card2 {
   inputs 0
   rows 1
   columns 1
   z {{parent.ImagePlaneWrapper.Distance}}
   lens_in_focal {{parent.Inputcam.FocalLength}}
-  lens_in_haperture {{(parent.Inputcam.Haperture)+ImagePlane.CardOverscan}}
-  control_points {3 3 3 6
+  lens_in_haperture {{(parent.Inputcam.Haperture)+ImagePlaneWrapper.CardOverscan}}
+  control_points {3 3 3 6 
 
-1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0}
-1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0}
-1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0}
-1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0}
-1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0}
-1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0}
-1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0}
-1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0}
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0} 
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0} 
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0} 
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0} 
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0} 
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0} 
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0} 
 1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
   name Card1
   xpos 730
