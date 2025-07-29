@@ -1,5 +1,5 @@
 set cut_paste_input [stack 0]
-version 14.0 v5
+version 14.1 v5
 push $cut_paste_input
 Group {
  name ImagePlane
@@ -9,25 +9,26 @@ Group {
  note_font "Bitstream Vera Sans Bold Italic"
  note_font_color 0xe9b763ff
  selected true
- xpos -893
- ypos 1847
+ xpos 5130
+ ypos -801
  postage_stamp_frame 1001
  addUserKnob {20 User l -}
  addUserKnob {26 txt l "" +STARTLINE T "<b><font size=\"40\"><font color=\"#BAA655\">IMAGE</font> <font size=\"40\"><font color=\"#558A95\"> PLANE</font></b>"}
  addUserKnob {26 ""}
  addUserKnob {26 ImagePlane l "<b><font color=\"#BAA655\">Input Attributes</font></b>"}
  addUserKnob {20 _1 l "" +STARTLINE n 1}
- _1 0
  addUserKnob {41 GeoChoice l "Choice of Geo" T ImagePlaneWrapper.GeoChoice}
  addUserKnob {41 RefFrame l "Reference Frame" T ImagePlaneWrapper.RefFrame}
  addUserKnob {22 setFrame l "Set to current frame" -STARTLINE T "v = nuke.frame()\nt = nuke.thisNode()\['RefFrame']\nt.setValue(v)"}
  addUserKnob {41 Holdin l "Input hold" T ImagePlaneWrapper.Holdin}
  addUserKnob {41 TransformType l "Transform Type" T ImagePlaneWrapper.TransformType}
  addUserKnob {41 Distance l "Geo Distance" t "Distance of the card or sphere. It will not affect the Input Geo" T ImagePlaneWrapper.Distance}
+ addUserKnob {41 groundPlane l "Ground Plane" T ImagePlaneWrapper.groundPlane}
+ addUserKnob {41 rotateX l "Rotate Ground" -STARTLINE T ImagePlaneWrapper.rotateX}
+ addUserKnob {41 translateY l "Translate Ground" -STARTLINE T ImagePlaneWrapper.translateY}
  addUserKnob {20 endGroup n -1}
  addUserKnob {26 ProjectionFixes l "<b><font color=\"#BAA655\">Projection Fixes</font></b>"}
  addUserKnob {20 _2 l "" +STARTLINE n 1}
- _2 0
  addUserKnob {41 occlusion_mode l "Occlusion Mode" T Project3D1.occlusion_mode}
  addUserKnob {41 CardOverscan l "Card Overscan" T ImagePlaneWrapper.CardOverscan}
  addUserKnob {41 overscan l "Scanline Overscan" T ScanlineRender1.overscan}
@@ -65,7 +66,7 @@ Group {
   xpos 861
   ypos 141
  }
-set N6ffe68d0 [stack 0]
+set Nea0a5540 [stack 0]
  Dot {
   name Dot12
   xpos 861
@@ -107,8 +108,8 @@ set N6ffe68d0 [stack 0]
   ypos -240
   number 1
  }
-set N6f779d80 [stack 0]
-push $N6f779d80
+set Nb61ff290 [stack 0]
+push $Nb61ff290
  FrameHold {
   firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
   name FrameHold3
@@ -144,7 +145,7 @@ push $N6f779d80
   ypos 118
   number 2
  }
-push $N6ffe68d0
+push $Nea0a5540
  Sphere {
   inputs 0
   radius {{parent.Card1.z}}
@@ -158,7 +159,31 @@ push $N6ffe68d0
   xpos 620
   ypos 54
  }
-push $N6ffe68d0
+ Card2 {
+  inputs 0
+  rows 1
+  columns 1
+  lens_in_focal 0.1
+  lens_in_haperture 4
+  translate {0 {parent.ImagePlaneWrapper.translateY} 0}
+  rotate {{parent.ImagePlaneWrapper.rotateX} 0 0}
+  uniform_scale 1000
+  control_points {3 3 3 6
+
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0}
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0}
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0}
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0}
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0}
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0}
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0}
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0}
+1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
+  name Card3
+  xpos 929
+  ypos -10
+ }
+push $Nea0a5540
  Card2 {
   inputs 0
   rows 1
@@ -166,16 +191,16 @@ push $N6ffe68d0
   z {{parent.ImagePlaneWrapper.Distance}}
   lens_in_focal {{parent.Inputcam.FocalLength}}
   lens_in_haperture {{(parent.Inputcam.Haperture)+ImagePlaneWrapper.CardOverscan}}
-  control_points {3 3 3 6 
+  control_points {3 3 3 6
 
-1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 
-1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0} 
-1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0} 
-1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0} 
-1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0} 
-1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0} 
-1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0} 
-1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0} 
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0}
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0}
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0}
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0}
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0}
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0}
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0}
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0}
 1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
   name Card1
   xpos 730
@@ -186,6 +211,13 @@ push $N6ffe68d0
   name TransformGeo2
   xpos 730
   ypos 54
+ }
+ MergeGeo {
+  inputs 2
+  name MergeGeo1
+  xpos 710
+  ypos 89
+  disable {{1-parent.ImagePlaneWrapper.groundPlane}}
  }
  Switch {
   inputs 3
@@ -237,6 +269,11 @@ push $N6ffe68d0
   Distance 100
   addUserKnob {7 CardOverscan l "Card Overscan" R 0 300}
   CardOverscan 10
+  addUserKnob {6 groundPlane l "Ground Plane" +STARTLINE}
+  groundPlane true
+  addUserKnob {3 rotateX l "Rotate Ground"}
+  rotateX -90
+  addUserKnob {3 translateY l "Translate Ground" -STARTLINE}
  }
  Output {
   name Output
