@@ -1,7 +1,9 @@
 set cut_paste_input [stack 0]
 version 14.1 v5
+push 0
 push $cut_paste_input
 Group {
+ inputs 2
  name ImagePlane
  tile_color 0x2b576bff
  gl_color 0x9b835eff
@@ -9,8 +11,8 @@ Group {
  note_font "Bitstream Vera Sans Bold Italic"
  note_font_color 0xe9b763ff
  selected true
- xpos 5130
- ypos -801
+ xpos 228
+ ypos -97
  postage_stamp_frame 1001
  addUserKnob {20 User l -}
  addUserKnob {26 txt l "" +STARTLINE T "<b><font size=\"40\"><font color=\"#BAA655\">IMAGE</font> <font size=\"40\"><font color=\"#558A95\"> PLANE</font></b>"}
@@ -23,6 +25,8 @@ Group {
  addUserKnob {41 Holdin l "Input hold" T ImagePlaneWrapper.Holdin}
  addUserKnob {41 TransformType l "Transform Type" T ImagePlaneWrapper.TransformType}
  addUserKnob {41 Distance l "Geo Distance" t "Distance of the card or sphere. It will not affect the Input Geo" T ImagePlaneWrapper.Distance}
+ addUserKnob {41 xrotate l "Rotate Card X" T ImagePlaneWrapper.xrotate}
+ addUserKnob {41 yrotate l "Rotate Card Y" T ImagePlaneWrapper.yrotate}
  addUserKnob {41 groundPlane l "Ground Plane" T ImagePlaneWrapper.groundPlane}
  addUserKnob {41 rotateX l "Rotate Ground" -STARTLINE T ImagePlaneWrapper.rotateX}
  addUserKnob {41 translateY l "Translate Ground" -STARTLINE T ImagePlaneWrapper.translateY}
@@ -36,7 +40,7 @@ Group {
  addUserKnob {41 samples l "Scanline Samples" T ScanlineRender1.samples}
  addUserKnob {20 endGroup_1 n -1}
  addUserKnob {26 ""}
- addUserKnob {26 txt2 l "" -STARTLINE T "<div style=\"text-align: left; font-size: 10px; color: #666666; font-style: italic;\">\n  v 1.1 : 2024-04\n</div>\n\n"}
+ addUserKnob {26 txt2 l "" -STARTLINE T "<div style=\"text-align: left; font-size: 10px; color: #666666; font-style: italic;\">\n  v 1.2 : 2025-07\n</div>\n\n"}
 }
  Input {
   inputs 0
@@ -66,7 +70,7 @@ Group {
   xpos 861
   ypos 141
  }
-set Nea0a5540 [stack 0]
+set Nb426170 [stack 0]
  Dot {
   name Dot12
   xpos 861
@@ -91,6 +95,7 @@ set Nea0a5540 [stack 0]
   win_translate {{parent.Inputcam.WindowTranslate} {parent.Inputcam.WindowTranslate}}
   win_scale {{parent.Inputcam.WindowScale} {parent.Inputcam.WindowScale}}
   name PROJ_CAM
+  selected true
   xpos 647
   ypos -140
  }
@@ -108,8 +113,8 @@ set Nea0a5540 [stack 0]
   ypos -240
   number 1
  }
-set Nb61ff290 [stack 0]
-push $Nb61ff290
+set Nfd94250 [stack 0]
+push $Nfd94250
  FrameHold {
   firstFrame {{parent.ImagePlaneWrapper.RefFrame}}
   name FrameHold3
@@ -145,7 +150,7 @@ push $Nb61ff290
   ypos 118
   number 2
  }
-push $Nea0a5540
+push $Nb426170
  Sphere {
   inputs 0
   radius {{parent.Card1.z}}
@@ -183,7 +188,7 @@ push $Nea0a5540
   xpos 929
   ypos -10
  }
-push $Nea0a5540
+push $Nb426170
  Card2 {
   inputs 0
   rows 1
@@ -191,6 +196,13 @@ push $Nea0a5540
   z {{parent.ImagePlaneWrapper.Distance}}
   lens_in_focal {{parent.Inputcam.FocalLength}}
   lens_in_haperture {{(parent.Inputcam.Haperture)+ImagePlaneWrapper.CardOverscan}}
+  useMatrix true
+  matrix {
+  	{1 0 0 0}
+  	{0 1 0 0}
+  	{{parent.ImagePlaneWrapper.xrotate} {parent.ImagePlaneWrapper.yrotate} 1 0}
+  	{0 0 0 1}
+	}
   control_points {3 3 3 6
 
 1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0}
@@ -260,6 +272,8 @@ push $Nea0a5540
   xpos 496
   ypos 324
   addUserKnob {20 User}
+  addUserKnob {7 xrotate l "Rotate X" R -1 1}
+  addUserKnob {7 yrotate l "Rotate Y" R -1 1}
   addUserKnob {4 GeoChoice l "Geo Choice" M {Card Sphere "Input Geo" ""}}
   addUserKnob {3 RefFrame l "Ref Frame"}
   RefFrame 1001
@@ -270,7 +284,6 @@ push $Nea0a5540
   addUserKnob {7 CardOverscan l "Card Overscan" R 0 300}
   CardOverscan 10
   addUserKnob {6 groundPlane l "Ground Plane" +STARTLINE}
-  groundPlane true
   addUserKnob {3 rotateX l "Rotate Ground"}
   rotateX -90
   addUserKnob {3 translateY l "Translate Ground" -STARTLINE}
